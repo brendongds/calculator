@@ -1,98 +1,126 @@
-let runningTotal = 0;
-let buffer = 0.0;
-let previousOperator = null;
+class Calculator {
+  constructor(previousOperandTextElement, currentOperandTextElement) {
+    this.previousOperandTextElement = previousOperandTextElement
+    this.currentOperandTextElement = currentOperandTextElement
+    this.clear()
+  }
 
-const screen = document.querySelector('.screen');
+  clear() {
+    this.currentOperand = ''
+    this.previousOperand = ''
+    this.operation = undefined
+  }
 
-function buttonClick(value){
-    if(isNaN(value)){
-        handleSymbol(value);
-    }else{
-        handleNumber(value);
+  delete() {
+    this.currentOperand = this.currentOperand.toString().slice(0, -1)
+  }
+
+  appendNumber(number) {
+    if (number === '.' && this.currentOperand.includes('.')) return
+    this.currentOperand = this.currentOperand.toString() + number.toString()
+  }
+
+  chooseOperation(operation) {
+    if (this.currentOperand === '') return
+    if (this.previousOperand !== '') {
+      this.compute()
     }
-    screen.innerText = buffer;
+    this.operation = operation
+    this.previousOperand = this.currentOperand
+    this.currentOperand = ''
+  }
+
+  compute() {
+    let computation
+    const prev = parseFloat(this.previousOperand)
+    const current = parseFloat(this.currentOperand)
+    if (isNaN(prev) || isNaN(current)) return
+    switch (this.operation) {
+      case '+':
+        computation = prev + current
+        break
+      case '-':
+        computation = prev - current
+        break
+      case 'x':
+        computation = prev * current
+        break
+      case '÷':
+        computation = prev / current
+        break
+      default:
+        return
+    }
+    this.currentOperand = computation
+    this.operation = undefined
+    this.previousOperand = ''
+  }
+
+  getDisplayNumber(number) {
+    const stringNumber = number.toString()
+    const integerDigits = parseFloat(stringNumber.split('.')[0])
+    const decimalDigits = stringNumber.split('.')[1]
+    let integerDisplay
+    if (isNaN(integerDigits)) {
+      integerDisplay = ''
+    } else {
+      integerDisplay = integerDigits.toLocaleString('en', { maximumFractionDigits: 0 })
+    }
+    if (decimalDigits != null) {
+      return `${integerDisplay}.${decimalDigits}`
+    } else {
+      return integerDisplay
+    }
+  }
+
+  updateDisplay() {
+    this.currentOperandTextElement.innerText =
+      this.getDisplayNumber(this.currentOperand)
+    if (this.operation != null) {
+      this.previousOperandTextElement.innerText =
+        `${this.getDisplayNumber(this.previousOperand)} ${this.operation}`
+    } else {
+      this.previousOperandTextElement.innerText = ''
+    }
+  }
 }
 
-function handleSymbol(symbol){
-    switch(symbol){
-        case 'C':
-            buffer = 0.0;
-            runningTotal = 0;
-            break;
-        case '=':
-            if(previousOperator === null){
-                return
-            }
-            flushOperation(parseFloat(buffer));
-            previousOperator = null;
-            buffer = runningTotal;
-            runningTotal = 0;
-            break;
-        case '←':
-            if(buffer.toString().length === 1){
-                buffer = 0.0;
-            }else{
-                buffer = parseFloat(buffer.toString().substring(0, buffer.toString().length - 1));
-            }
-            break;
-        case '+':
-        case '−':
-        case 'x':
-        case '÷':
-            handleMath(symbol);
-            break;
-        case '.':
-            if(buffer.toString().indexOf('.') === -1){
-                buffer = parseFloat(buffer.toString() + '.');
-            }
-            break;
-    }
-}
 
-function handleMath(symbol){
-    if(buffer === 0.0){
-        return;
-    }
+const numberButtons = document.querySelectorAll('[data-number]')
+const operationButtons = document.querySelectorAll('[data-operation]')
+const equalsButton = document.querySelector('[data-equals]')
+const deleteButton = document.querySelector('[data-delete]')
+const allClearButton = document.querySelector('[data-all-clear]')
+const previousOperandTextElement = document.querySelector('[data-previous-operand]')
+const currentOperandTextElement = document.querySelector('[data-current-operand]')
 
-    const floatBuffer = parseFloat(buffer);
+const calculator = new Calculator(previousOperandTextElement, currentOperandTextElement)
 
-    if(runningTotal === 0){
-        runningTotal = floatBuffer;
-    }else{
-        flushOperation(floatBuffer);
-    }
-    previousOperator = symbol;
-    buffer = 0.0;
-}
+numberButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    calculator.appendNumber(button.innerText)
+    calculator.updateDisplay()
+  })
+})
 
-function flushOperation(floatBuffer){
-    if(previousOperator === '+'){
-        runningTotal += floatBuffer;
-    }else if(previousOperator === '−'){
-        runningTotal -= floatBuffer;
-    }else if(previousOperator === 'x'){
-        runningTotal *= floatBuffer;
-    }else{
-        runningTotal /= floatBuffer;
-    }
-    buffer = parseFloat(runningTotal.toFixed(2));
-}
+operationButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    calculator.chooseOperation(button.innerText)
+    calculator.updateDisplay()
+  })
+})
 
-function handleNumber(numberString){
-    if(buffer === 0.0){
-        buffer = parseFloat(numberString);
-    }else if(numberString === '.' && buffer.toString().indexOf('.') !== -1){
-        // ignorar entrada de ponto se o buffer já contém um
-        return;
-    }else{
-        buffer = parseFloat(buffer.toString() + numberString);
-    }
-}
+equalsButton.addEventListener('click', button => {
+  calculator.compute()
+  calculator.updateDisplay()
+})
 
-function init(){
-    document.querySelector('.calc-buttons').addEventListener('click', function(event){
-        buttonClick(event.target.innerText);
-    })
-}
+allClearButton.addEventListener('click', button => {
+  calculator.clear()
+  calculator.updateDisplay()
+})
 
-init();
+deleteButton.addEventListener('click', button => {
+  calculator.delete()
+  calculator.updateDisplay()
+})

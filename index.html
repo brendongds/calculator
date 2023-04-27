@@ -1,91 +1,47 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Calculadora</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Calculator</title>
+  <link href="style.css" rel="stylesheet">
+  <script src="scripts.js" defer></script>
+
 </head>
+
 <body>
 
-    <div class="wrapper">       
-        <section class="screen">
-            0
-        </section>
-        <section class="calc-buttons">
-            <div class="calc-button-row">
-                <button class="calc-button double">
-                    C
-                </button>
-                <button class="calc-button">
-                    &larr;
-                </button>
-                <button class="calc-button">
-                    &divide;
-                </button>
-            </div>
+  <div class="calculator-grid">
+    <div class="output">
+      <div data-previous-operand class="previous-operand"></div>
+      <div data-current-operand class="current-operand"></div>
+    </div>
 
-            <div class="calc-button-row">
-                <button class="calc-button ">
-                    7
-                </button>
-                <button class="calc-button ">
-                    8
-                </button>
-                <button class="calc-button ">
-                    9
-                </button>
-                <button class="calc-button ">
-                    x
-                </button>
-            </div>
+    <button data-all-clear class="span-two">AC</button>
+    <button data-delete>&larr;</button>
+    <button data-operation>÷</button>
+    <button data-number>7</button>
+    <button data-number>8</button>
+    <button data-number>9</button>
+    <button data-operation>x</button>
+    <button data-number>4</button>
+    <button data-number>5</button>
+    <button data-number>6</button>
+    <button data-operation>-</button>
+    <button data-number>1</button>
+    <button data-number>2</button>
+    <button data-number>3</button>
+    <button data-operation>+</button>
+    <button data-number>.</button>
+    <button data-number>0</button>
+    <button data-equals class="span-two">=</button>
+    
+  </div>
+  <span class="sign">B.Gomes | Diabetinho</span>
 
-            <div class="calc-button-row">
-                <button class="calc-button ">
-                    4
-                </button>
-                <button class="calc-button ">
-                    5
-                </button>
-                <button class="calc-button ">
-                    6
-                </button>
-                <button class="calc-button ">
-                    &minus;
-                </button>
-            </div>
-
-            <div class="calc-button-row">
-                <button class="calc-button ">
-                    1
-                </button>
-                <button class="calc-button ">
-                    2
-                </button>
-                <button class="calc-button ">
-                    3
-                </button>
-                <button class="calc-button ">
-                    &plus;
-                </button>
-            </div>
-            <div class="calc-button-row">
-                <button class="calc-button triple">
-                    0
-                </button>
-                <button class="calc-button">
-                    &comma;
-                </button>
-                <button class="calc-button">
-                    &equals;
-                </button>
-            </div>
-
-        </section>
-        bgomes
-
-
-    <script src="scripts.js"></script>
 </body>
+
 </html>
+
+
